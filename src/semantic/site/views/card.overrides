@@ -1,0 +1,7 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+.ui.cards > .card > .content,
+.ui.card > .content {
+  flex-grow: initial;
+}
