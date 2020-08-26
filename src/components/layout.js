@@ -4,11 +4,14 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link } from "gatsby";
 import { StaticQuery, graphql } from "gatsby";
+import "semantic-ui-less/semantic.less";
 import { HelmetDatoCms } from "gatsby-source-datocms";
+import Promoted from './promoted';
+import { Segment, Container } from 'semantic-ui-react';
 
 import "../styles/index.sass";
 
-const TemplateWrapper = ({ children }) => {
+const Layout = ({ children }) => {
   const [showMenu, setShowMenu] = useState(false);
   return (
     <StaticQuery
@@ -44,75 +47,23 @@ const TemplateWrapper = ({ children }) => {
         }
       `}
       render={data => (
-        <div className={`container ${showMenu ? "is-open" : ""}`}>
+        <Segment as={Container} className={`container ${showMenu ? "is-open" : ""}`}>
           <HelmetDatoCms
             favicon={data.datoCmsSite.faviconMetaTags}
             seo={data.datoCmsHome.seoMetaTags}
           />
-          <div className="container__sidebar">
-            <div className="sidebar">
-              <h6 className="sidebar__title">
-                <Link to="/">{data.datoCmsSite.globalSeo.siteName}</Link>
-              </h6>
-              <div
-                className="sidebar__intro"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    data.datoCmsHome.introTextNode.childMarkdownRemark.html
-                }}
-              />
-              <ul className="sidebar__menu">
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/about">About</Link>
-                </li>
-              </ul>
-              <p className="sidebar__social">
-                {data.allDatoCmsSocialProfile.edges.map(({ node: profile }) => (
-                  <a
-                    key={profile.profileType}
-                    href={profile.url}
-                    target="blank"
-                    className={`social social--${profile.profileType.toLowerCase()}`}
-                  >
-                    {" "}
-                  </a>
-                ))}
-              </p>
-              <div className="sidebar__copyright">
-                {data.datoCmsHome.copyright}
-              </div>
-            </div>
-          </div>
-          <div className="container__body">
-            <div className="container__mobile-header">
-              <div className="mobile-header">
-                <div className="mobile-header__menu">
-                  <button
-                    onClick={e => {
-                      e.preventDefault();
-                      setShowMenu(!showMenu);
-                    }}
-                  />
-                </div>
-                <div className="mobile-header__logo">
-                  <Link to="/">{data.datoCmsSite.globalSeo.siteName}</Link>
-                </div>
-              </div>
-            </div>
-            {children}
-          </div>
-        </div>
+          <Segment as={Container}>
+            <Promoted />
+          </Segment>
+        </Segment>
       )}
     />
   );
 };
 
-TemplateWrapper.propTypes = {
+Layout.propTypes = {
   children: PropTypes.object
 };
 
-export default TemplateWrapper;
+export default Layout;
 /* eslint-enable jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid*/
